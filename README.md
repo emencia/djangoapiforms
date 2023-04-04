@@ -126,7 +126,7 @@ interface LoginPostResponse {
   bar: Array<string>;
 }
 
-const { error, res, errors } = await forms.postForm<LoginPostResponse>("/api/account/login", {
+const { error, res, errors } = await forms.post<LoginPostResponse>("/api/account/login", {
   username: "foo",
   password: "bar",
 });
