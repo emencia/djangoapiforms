@@ -23,7 +23,7 @@ Create a `forms` object with the composable, passing it an api instance
 
 ```ts
 import { useApi } from "restmix";
-import { useForms } from "django-apiforms";
+import { useForms } from "djangoapiforms";
 
 const api = useApi();
 const forms = useForms(api);
@@ -46,7 +46,7 @@ To post a form with a payload:
 import { forms } from "@/state";
 
 async function postLogin() {
-  const { error, res, errors } = await forms.postForm("/api/account/login", {
+  const { error, res, errors } = await forms.post("/api/account/login", {
     username: "foo",
     password: "bar",
   });
@@ -84,7 +84,7 @@ To customize the status codes for validation and schema levels:
 
 ```ts
 import { useApi } from "restmix";
-import { useForms } from "django-apiforms";
+import { useForms } from "djangoapiforms";
 
 const api = useApi();
 const forms = useForms(api, {
@@ -103,7 +103,7 @@ default
 Post and put form have the same signature:
 
 ```ts
-const putForm: <T extends {
+const put: <T extends {
     errors?: FormErrors | undefined;
 } = Record<string, any>>(uri: string, formData: Record<string, any>, multipart: false) => Promise<{
     error: null | {
