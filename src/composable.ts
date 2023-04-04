@@ -8,7 +8,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
 }) => {
   let codes = statusCodes;
 
-  const processFormErrors = (formErrors: FormErrors): Record<string, string> => {
+  const processErrors = (formErrors: FormErrors): Record<string, string> => {
     const errors: Record<string, string> = {};
     for (const [name, errs] of Object.entries(formErrors)) {
       let msgs = new Array<string>();
@@ -48,7 +48,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
         case codes.validation:
           // check form validation errors 
           const rawerrs = resp.data["errors"] as FormErrors;
-          const errors = processFormErrors(rawerrs);
+          const errors = processErrors(rawerrs);
           return { error: { type: "validation" }, errors: errors, res: resp }
         default:
           const err = JSON.stringify(resp.data, null, "  ");
@@ -60,7 +60,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
       // check form validation errors 
       const rawerrs = resp.data["errors"] as FormErrors;
       if (Object.keys(rawerrs).length > 0) {
-        const errors = processFormErrors(rawerrs);
+        const errors = processErrors(rawerrs);
         return { error: { type: "validation" }, errors: errors, res: resp }
       }
     }
@@ -68,10 +68,10 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
     return { error: null, res: resp, errors: {} }
   }
 
-  const putForm = async <T extends { errors?: FormErrors } = Record<string, any>>(
+  const put = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
     formData: Record<string, any>,
-    multipart: false,
+    multipart = false,
   ): Promise<{
     error: null | {
       type: FormResponseErrorType,
@@ -82,10 +82,10 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
     return await _postFormData<T>(uri, formData, true, multipart)
   }
 
-  const postForm = async <T extends { errors?: FormErrors } = Record<string, any>>(
+  const post = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
     formData: Record<string, any>,
-    multipart: false,
+    multipart = false,
   ): Promise<{
     error: null | {
       type: FormResponseErrorType,
@@ -97,9 +97,9 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
   }
 
   return {
-    postForm,
-    putForm,
-    processFormErrors,
+    post,
+    put,
+    processErrors,
     codes,
   }
 }

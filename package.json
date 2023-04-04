@@ -1,6 +1,6 @@
 {
   "name": "djangoapiforms",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "A composable to handle Django forms in json",
   "scripts": {
     "build": "rm -f dist/* && rollup -c",
