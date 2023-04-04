@@ -37,7 +37,7 @@ const forms = useForms(api);
 export { forms }
 ```
 
-For script src a `$forms` object is available once the script loaded:
+For script src a `$useForms` object is available once the script loaded:
 
 ```html
 <script src="https://unpkg.com/restmix@0.0.1/dist/api.min.js"></script>
@@ -160,7 +160,11 @@ Post and put form have the same signature:
 ```ts
 const put: <T extends {
     errors?: FormErrors | undefined;
-} = Record<string, any>>(uri: string, formData: Record<string, any>, multipart: false) => Promise<{
+} = Record<string, any>>(
+    uri: string, 
+    formData: Record<string, any> | Array<any>, 
+    multipart: false
+  ) => Promise<{
     error: null | {
         type: FormResponseErrorType;
     };
@@ -173,7 +177,7 @@ const put: <T extends {
 with schemas, like this:
 
 ```ts
-interface LoginPostResponse {
+interface LoginPostResponseContract {
   // required
   errors?: FormErrors;
   // other user defined fields
@@ -181,11 +185,11 @@ interface LoginPostResponse {
   bar: Array<string>;
 }
 
-const { error, res, errors } = await forms.post<LoginPostResponse>("/api/account/login", {
+const { error, res, errors } = await forms.post<LoginPostResponseContract>("/api/account/login", {
   username: "foo",
   password: "bar",
 });
 if (!error) {
-  const responseData: LoginPostResponse = res.data;
+  const responseData: LoginPostResponseContract = res.data;
 }
 ```
