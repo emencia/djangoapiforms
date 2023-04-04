@@ -12,7 +12,7 @@ export default {
     {
       file: 'dist/forms.min.js',
       format: 'iife',
-      name: '$forms',
+      name: '$useForms',
       plugins: [terser()]
     }],
   plugins: [

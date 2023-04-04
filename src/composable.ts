@@ -22,7 +22,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
 
   const _postFormData = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
-    data: Record<string, any>,
+    data: Record<string, any> | Array<any>,
     put: boolean,
     multipart: boolean,
   ): Promise<{
@@ -70,7 +70,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
 
   const put = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
-    formData: Record<string, any>,
+    formData: Record<string, any> | Array<any>,
     multipart = false,
   ): Promise<{
     error: null | {
@@ -84,7 +84,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
 
   const post = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
-    formData: Record<string, any>,
+    formData: Record<string, any> | Array<any>,
     multipart = false,
   ): Promise<{
     error: null | {
