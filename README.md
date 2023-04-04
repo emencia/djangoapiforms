@@ -4,8 +4,8 @@
 
 A composable to handle Django forms in json
 
-- Post and put forms methods
-- Errors management from Django form errors
+- **Post and put** forms methods
+- **Errors management** from Django form errors
 
 ## Install
 
@@ -13,6 +13,12 @@ A composable to handle Django forms in json
 yarn add djangoapiforms
 # or
 npm install djangoapiforms
+```
+
+Or with script src:
+
+```html
+<script src="https://unpkg.com/djangoapiforms@0.0.4/dist/forms.min.js"></script>
 ```
 
 ## Usage
@@ -31,12 +37,33 @@ const forms = useForms(api);
 export { forms }
 ```
 
+For script src a `$forms` object is available once the script loaded:
+
+```html
+<script src="https://unpkg.com/restmix@0.0.1/dist/api.min.js"></script>
+<script src="https://unpkg.com/djangoapiforms@0.0.3/dist/forms.min.js"></script>
+<script>
+const forms = $useForms($api());
+</script> 
+```
+
 #### Parameters
 
 - `api`: An instance of the useApi function from the "restmix" library.
 - `statusCodes`: (Optional) An object with custom form status codes for schema and validation
 
 Documentation of the api object: check the [Restmix documentation](https://synw.github.io/restmix/ts/get)
+
+### Csrf tokens
+
+To use a csrf token for the post and put requests:
+
+```ts
+const api = useApi();
+const token="xxx";
+api.setCsrfToken(token);
+const forms = useForms(api);
+```
 
 ### Post a form
 
@@ -64,6 +91,12 @@ async function postLogin() {
 }
 ```
 
+#### Parameters
+
+- `uri` (str): the endpoint url to post or put to
+- `payload` (Record<string, any> | Array<any>): the payload to post or put
+- `multipart` (Optional): post the data in multipart form data format, defaults to `false`
+
 #### Process the form in the backend
 
 If the form has errors, send them back to the frontend using this
@@ -83,6 +116,8 @@ if form.is_valid() is False:
     errors = {"errors": form.errors.get_json_data(escape_html=True)}
     # send the errors data to the frontend
 ```
+
+For more info and example check the [django-spaninja template documentation](https://synw.github.io/django-spaninja/get_started/forms)
 
 ## Errors
 
