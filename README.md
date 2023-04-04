@@ -64,6 +64,26 @@ async function postLogin() {
 }
 ```
 
+#### Process the form in the backend
+
+If the form has errors, send them back to the frontend using this
+format:
+
+```python
+errors: Dict[str, List[Dict[str, Any]]]
+```
+
+Example:
+
+```python
+from django.contrib.auth.forms import AuthenticationForm
+
+form = AuthenticationForm(data=payload.dict())
+if form.is_valid() is False:
+    errors = {"errors": form.errors.get_json_data(escape_html=True)}
+    # send the errors data to the frontend
+```
+
 ## Errors
 
 Form error types:
