@@ -5,3 +5,6 @@ dist-ssr
 *.local
 yarn.lock
 coverage/
+test/django-spaninja
+.pytest_cache
+.venv
