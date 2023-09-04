@@ -25,6 +25,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
     data: Record<string, any> | Array<any>,
     put: boolean,
     multipart: boolean,
+    verbose: boolean,
   ): Promise<{
     error: null | {
       type: FormResponseErrorType,
@@ -34,17 +35,19 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
   }> => {
     let resp: ApiResponse<T>;
     if (!put) {
-      // console.log("POST", uri, JSON.stringify(data, null, "  "));
-      resp = await api.post<T>(uri, data, multipart);
+      console.log("POST FORM", uri, JSON.stringify(data, null, "  "));
+      resp = await api.post<T>(uri, data, multipart, verbose);
+      console.log("RES FORM", resp);
     } else {
-      resp = await api.put<T>(uri, data, multipart);
+      resp = await api.put<T>(uri, data, verbose);
     }
     if (!resp.ok) {
       // status code is > 299
       switch (resp.status) {
         case codes.schema:
           const msg = JSON.stringify(resp.data, null, "  ");
-          throw new Error(`${codes.schema} Invalid schema for form data ${msg}`)
+          return { error: { type: "schema" }, errors: { "error": msg }, res: resp }
+        //throw new Error(`${codes.schema} Invalid schema for form data ${msg}`)
         case codes.validation:
           // check form validation errors 
           const rawerrs = resp.data["errors"] as FormErrors;
@@ -71,7 +74,7 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
   const put = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
     formData: Record<string, any> | Array<any>,
-    multipart = false,
+    verbose = false,
   ): Promise<{
     error: null | {
       type: FormResponseErrorType,
@@ -79,13 +82,14 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
     res: ApiResponse<T>,
     errors: Record<string, string>
   }> => {
-    return await _postFormData<T>(uri, formData, true, multipart)
+    return await _postFormData<T>(uri, formData, true, false, verbose)
   }
 
   const post = async <T extends { errors?: FormErrors } = Record<string, any>>(
     uri: string,
     formData: Record<string, any> | Array<any>,
     multipart = false,
+    verbose = false,
   ): Promise<{
     error: null | {
       type: FormResponseErrorType,
@@ -93,7 +97,10 @@ const useForms = (api: ReturnType<typeof useApi>, statusCodes: FormStatusCodes =
     res: ApiResponse<T>,
     errors: Record<string, string>
   }> => {
-    return await _postFormData<T>(uri, formData, false, multipart)
+    console.log("POST PAYLOAD", formData);
+    const data = await _postFormData<T>(uri, formData, false, multipart, verbose)
+    console.log("DATA", data)
+    return data
   }
 
   return {
