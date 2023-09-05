@@ -7,6 +7,8 @@ A composable to handle Django forms in json
 - **Post and put** forms methods
 - **Errors management** from Django form errors
 
+:books: [Api doc](https://emencia.github.io/djangoapiforms/)
+
 ## Install
 
 ```bash
@@ -202,3 +204,5 @@ if (!error) {
   const responseData: CustomResponseType = res.data;
 }
 ```
+
+:books: [Api doc](https://emencia.github.io/djangoapiforms/)
