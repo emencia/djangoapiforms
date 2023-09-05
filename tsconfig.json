@@ -45,13 +45,12 @@
     "test"
   ],
   "typedocOptions": {
-    "name": "Restmix documentation",
+    "name": "Django api forms documentation",
     "readme": "none",
     "entryPoints": [
       "src/interfaces.ts",
-      "src/api.ts",
-      "src/errors.ts",
+      "src/composable.ts",
     ],
-    "out": "docsite/public/apidoc/auto",
+    "out": "docs",
   }
 }
