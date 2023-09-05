@@ -18,7 +18,7 @@ npm install djangoapiforms
 Or with script src:
 
 ```html
-<script src="https://unpkg.com/djangoapiforms@0.0.4/dist/forms.min.js"></script>
+<script src="https://unpkg.com/djangoapiforms@0.1.0/dist/forms.min.js"></script>
 ```
 
 ## Usage
@@ -40,9 +40,10 @@ export { forms }
 For script src a `$useForms` object is available once the script loaded:
 
 ```html
-<script src="https://unpkg.com/restmix@0.0.1/dist/api.min.js"></script>
-<script src="https://unpkg.com/djangoapiforms@0.0.3/dist/forms.min.js"></script>
+<script src="https://unpkg.com/restmix@0.2.0/dist/api.min.js"></script>
+<script src="https://unpkg.com/djangoapiforms@0.1.0/dist/forms.min.js"></script>
 <script>
+// the $api global var comes from the restmix package imported above
 const forms = $useForms($api());
 </script> 
 ```
@@ -143,23 +144,25 @@ import { useForms } from "djangoapiforms";
 
 const api = useApi();
 const forms = useForms(api, {
-  schema: 418,
+  schema: 200,
   validation: 200,
 });
 ```
 
 The example above uses the <kbd>200</kbd> status code for a response with some form
-validation errors: this is the default behavior of Django. If possible we
-recommend using a specific status code for form validation error: <kbd>422</kbd> by
-default
+validation and schema errors: this is the default behavior of Django. If possible we
+recommend using a specific status code for errors: we use <kbd>422</kbd> by
+default for validation errors, and <kbd>418</kbd> for schema errors.
 
-## Types
+## Typed responses
 
-Post and put form have the same signature:
+### Default response type
+
+Example with the post function's signature:
 
 ```ts
-const put: <T extends {
-    errors?: FormErrors | undefined;
+const post: <T extends {
+    errors?: FormErrors;
 } = Record<string, any>>(
     uri: string, 
     formData: Record<string, any> | Array<any>, 
@@ -173,23 +176,29 @@ const put: <T extends {
 }>
 ```
 
+Check the `src/interfaces.ts` file for more details.
+
 `T` is the expected response payload interface from the backend. This is to use
-with schemas, like this:
+with schemas
+
+### Custom response type
 
 ```ts
-interface LoginPostResponseContract {
-  // required
-  errors?: FormErrors;
+import { FormErrors, FormResponseErrorType } from "djangoapiforms";
+
+interface CustomResponseType {
+  error?: { type: FormResponseErrorType },
+  errors?: FormErrors,
   // other user defined fields
   foo: number;
   bar: Array<string>;
 }
 
-const { error, res, errors } = await forms.post<LoginPostResponseContract>("/api/account/login", {
+const { error, res, errors } = await forms.post<CustomResponseType>("/api/account/login", {
   username: "foo",
   password: "bar",
 });
 if (!error) {
-  const responseData: LoginPostResponseContract = res.data;
+  const responseData: CustomResponseType = res.data;
 }
 ```
